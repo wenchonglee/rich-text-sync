@@ -20,13 +20,26 @@ app.use(async (ctx, next) => {
     await ctx.send({
       root: `${Deno.cwd()}/dist`,
       index: "index.html",
-      path: "/",
     });
   } catch {
     // function must return a promise: https://github.com/oakserver/oak/issues/148
     await next();
   }
 });
+
+// hacky solution to fallthrough all remaining paths to webapp
+app.use(async (ctx, next) => {
+  try {
+    await ctx.send({
+      root: `${Deno.cwd()}/dist`,
+      index: "index.html",
+      path: "/",
+    });
+  } catch {
+    await next();
+  }
+});
+
 const changeStream = User.watch();
 changeStream.on("change", (next) => {
   // process any change event
