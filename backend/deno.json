@@ -1,6 +1,7 @@
 {
   "tasks": {
     "dev": "deno run --allow-read --allow-sys --allow-env --allow-net --watch main.ts",
-    "fe": "cd ../frontend && yarn dev"
+    "prod": "deno run --allow-read --allow-sys --allow-env --allow-net main.ts",
+    "build-fe": "cd ../frontend && yarn build && cp dist ../backend -r"
   }
 }

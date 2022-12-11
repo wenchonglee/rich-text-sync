@@ -9,23 +9,24 @@ mongoose.set("debug", true);
 const app = new oak.Application();
 const PORT = 3000;
 
+app.use(cors.oakCors());
+app.use(router.routes());
+app.use(router.allowedMethods());
+
+// not recommended, purely done because this is a POC
 app.use(async (ctx, next) => {
   try {
     // ref: https://deno.com/blog/deploy-static-files
     await ctx.send({
       root: `${Deno.cwd()}/dist`,
       index: "index.html",
+      path: "/",
     });
   } catch {
     // function must return a promise: https://github.com/oakserver/oak/issues/148
     await next();
   }
 });
-
-app.use(cors.oakCors());
-app.use(router.routes());
-app.use(router.allowedMethods());
-
 const changeStream = User.watch();
 changeStream.on("change", (next) => {
   // process any change event
