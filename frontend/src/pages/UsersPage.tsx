@@ -128,12 +128,13 @@ const SaveTextInput = (props: SaveTextInputProps) => {
   return (
     <TextInput
       maw={400}
+      label={user._id}
       defaultValue={user.username}
       onFocus={handleOnFocus}
       onBlur={handleOnBlur}
       rightSection={rightSection}
       onKeyDown={handleKeyDown}
-      variant={isFocused ? "default" : "unstyled"}
+      variant={isFocused ? "default" : "filled"}
     />
   );
 };

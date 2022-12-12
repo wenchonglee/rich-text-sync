@@ -1,11 +1,11 @@
-import { MantineProvider } from "@mantine/core";
+import { Global, MantineProvider } from "@mantine/core";
 import { NotificationsProvider } from "@mantine/notifications";
 import { ReactLocation, Router } from "@tanstack/react-location";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App";
-import { RTE } from "./pages/RTE";
+import { CreatePostPage, PostPage, PostsPage } from "./pages/PostsPage";
 import { UsersPage } from "./pages/UsersPage";
 
 const queryClient = new QueryClient({
@@ -22,6 +22,14 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>
       <MantineProvider withNormalizeCSS withGlobalStyles theme={{ colorScheme: "dark" }}>
+        <Global
+          styles={(theme) => ({
+            "span[data-type='mention']": {
+              fontWeight: 500,
+              color: theme.colors.blue[3],
+            },
+          })}
+        />
         <NotificationsProvider position="top-center" autoClose={8000}>
           <Router
             location={reactLocation}
@@ -31,8 +39,16 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
                 element: <UsersPage />,
               },
               {
+                path: "/posts/create",
+                element: <CreatePostPage />,
+              },
+              {
+                path: "/posts/:postId",
+                element: <PostPage />,
+              },
+              {
                 path: "/posts",
-                element: <RTE />,
+                element: <PostsPage />,
               },
             ]}
           >

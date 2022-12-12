@@ -14,7 +14,7 @@ export const MentionList = forwardRef((props: SuggestionProps, ref) => {
     const item = props.items[index];
 
     if (item) {
-      props.command({ id: item });
+      props.command({ id: item._id, label: item.username });
     }
   };
 
@@ -55,16 +55,16 @@ export const MentionList = forwardRef((props: SuggestionProps, ref) => {
 
   return (
     <Card withBorder>
-      <Stack>
+      <Stack spacing="xs">
         {props.items.length ? (
           props.items.map((item, index) => (
             <UnstyledButton
-              className={`item ${index === selectedIndex ? "is-selected" : ""}`}
               key={index}
+              p="xs"
               onClick={() => selectItem(index)}
-              bg={index === selectedIndex ? "blue.1" : undefined}
+              bg={index === selectedIndex ? "dark.4" : undefined}
             >
-              {item}
+              {item.username}
             </UnstyledButton>
           ))
         ) : (
@@ -79,37 +79,7 @@ export const suggestion: Omit<SuggestionOptions, "editor"> = {
   char: "@",
   items: async ({ query }) => {
     const response = await Axios.get<{ username: string }[]>(`/users?username=${query}`);
-    return response.data.map((item) => item.username);
-
-    // return [
-    //   "Lea Thompson",
-    //   "Cyndi Lauper",
-    //   "Tom Cruise",
-    //   "Madonna",
-    //   "Jerry Hall",
-    //   "Joan Collins",
-    //   "Winona Ryder",
-    //   "Christina Applegate",
-    //   "Alyssa Milano",
-    //   "Molly Ringwald",
-    //   "Ally Sheedy",
-    //   "Debbie Harry",
-    //   "Olivia Newton-John",
-    //   "Elton John",
-    //   "Michael J. Fox",
-    //   "Axl Rose",
-    //   "Emilio Estevez",
-    //   "Ralph Macchio",
-    //   "Rob Lowe",
-    //   "Jennifer Grey",
-    //   "Mickey Rourke",
-    //   "John Cusack",
-    //   "Matthew Broderick",
-    //   "Justine Bateman",
-    //   "Lisa Bonet",
-    // ]
-    //   .filter((item) => item.toLowerCase().startsWith(query.toLowerCase()))
-    //   .slice(0, 5);
+    return response.data;
   },
 
   render: () => {

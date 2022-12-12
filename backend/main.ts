@@ -1,6 +1,6 @@
 import { cors, mongoose, oak } from "./deps.ts";
 import { router } from "./router.ts";
-import { User } from "./schemas/users.ts";
+import "./watch.ts";
 
 if (typeof Deno.env.get("MONGO_URI") !== "string") throw "Env var MONGO_URI is required";
 await mongoose.connect(Deno.env.get("MONGO_URI") as string);
@@ -38,12 +38,6 @@ app.use(async (ctx, next) => {
   } catch {
     await next();
   }
-});
-
-const changeStream = User.watch();
-changeStream.on("change", (next) => {
-  // process any change event
-  console.log("received a change to the collection: \t", next.operationType); //, next);
 });
 
 console.log(`Server listening on port ${PORT}`);

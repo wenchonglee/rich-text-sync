@@ -2,10 +2,11 @@ import { mergeAttributes, Node } from "@tiptap/core";
 import Suggestion, { SuggestionOptions } from "@tiptap/suggestion";
 import { Node as ProseMirrorNode } from "prosemirror-model";
 import { PluginKey } from "prosemirror-state";
+import { ReactNode } from "react";
 
 export type MentionOptions = {
   HTMLAttributes: Record<string, any>;
-  renderLabel: (props: { options: MentionOptions; node: ProseMirrorNode }) => string;
+  renderLabel: (props: { options: MentionOptions; node: ProseMirrorNode }) => ReactNode;
   suggestion: Omit<SuggestionOptions, "editor">;
 };
 
@@ -120,12 +121,12 @@ export const Mention = Node.create<MentionOptions>({
     ];
   },
 
-  renderText({ node }) {
-    return this.options.renderLabel({
-      options: this.options,
-      node,
-    });
-  },
+  // renderText({ node }) {
+  //   return this.options.renderLabel({
+  //     options: this.options,
+  //     node,
+  //   });
+  // },
 
   addKeyboardShortcuts() {
     return {

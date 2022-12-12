@@ -1,13 +1,17 @@
+import { Button, Code, Input } from "@mantine/core";
 import { Link, RichTextEditor } from "@mantine/tiptap";
+import { useNavigate } from "@tanstack/react-location";
 import { useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
+import { Post as PostType, useCreatePost } from "../api/posts";
 import { Mention } from "./extension";
 import { suggestion } from "./suggestion";
 
-const content = '<p><span data-type="mention" data-id="Lea Thompson">@Lea Thompson</span> </p>';
-// '<h2 style="text-align: center;">Welcome to Mantine rich text editor</h2><p><code>RichTextEditor</code> component focuses on usability and is designed to be as simple as possible to bring a familiar editing experience to regular users. <code>RichTextEditor</code> is based on <a href="https://tiptap.dev/" rel="noopener noreferrer" target="_blank">Tiptap.dev</a> and supports all of its features:</p><ul><li>General text formatting: <strong>bold</strong>, <em>italic</em>, <u>underline</u>, <s>strike-through</s> </li><li>Headings (h1-h6)</li><li>Sub and super scripts (<sup>&lt;sup /&gt;</sup> and <sub>&lt;sub /&gt;</sub> tags)</li><li>Ordered and bullet lists</li><li>Text align&nbsp;</li><li>And all <a href="https://tiptap.dev/extensions" target="_blank" rel="noopener noreferrer">other extensions</a></li></ul>';
+export const PostForm = ({ post }: { post?: PostType }) => {
+  const { mutate } = useCreatePost();
+  const navigate = useNavigate();
+  const isCreate = !post;
 
-export const RTE = () => {
   const editor = useEditor({
     extensions: [
       StarterKit,
@@ -16,8 +20,25 @@ export const RTE = () => {
         suggestion,
       }),
     ],
-    content,
+    content: post?.content,
   });
+
+  const handleSubmit = () => {
+    if (!editor) return;
+
+    if (isCreate) {
+      mutate(
+        {
+          content: editor.getHTML(),
+        },
+        {
+          onSuccess: () => {
+            navigate({ to: "/posts" });
+          },
+        }
+      );
+    }
+  };
 
   return (
     <>
@@ -53,10 +74,19 @@ export const RTE = () => {
           </RichTextEditor.Toolbar>
 
           <RichTextEditor.Content />
+
+          <Button size="xs" onClick={handleSubmit} m="md">
+            {isCreate ? "Create post" : "Edit post"}
+          </Button>
         </RichTextEditor>
       </div>
-      <pre>{JSON.stringify(editor?.getJSON(), null, 2)}</pre>
-      <pre>{JSON.stringify(editor?.getHTML(), null, 2)}</pre>
+
+      <Input.Wrapper label="HTML" m="md">
+        <Code block>{editor?.getHTML()}</Code>
+      </Input.Wrapper>
+      <Input.Wrapper label="JSON" m="md">
+        <Code block>{JSON.stringify(editor?.getJSON(), null, 2)}</Code>
+      </Input.Wrapper>
     </>
   );
 };
