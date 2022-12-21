@@ -1,14 +1,33 @@
-import { ActionIcon, Box, Divider, Loader, Stack, TextInput, Title } from "@mantine/core";
+import { ActionIcon, Box, Divider, Loader, Stack, Text, TextInput, Title } from "@mantine/core";
 import { showNotification } from "@mantine/notifications";
 import { IconTrash } from "@tabler/icons";
+import { useMatch } from "@tanstack/react-location";
 import { FocusEventHandler, KeyboardEventHandler, useRef, useState } from "react";
 import { useCreateUser, useDeleteUser, User, useReadUsers, useUpdateUser } from "../api/users";
 
 export const UsersPage = () => {
   const { data, isLoading } = useReadUsers();
+  const { params } = useMatch();
 
   if (isLoading || !data) {
     return <Loader />;
+  }
+
+  if (params.userId) {
+    const matchedUser = data.find((user) => user._id === params.userId);
+    if (!matchedUser) {
+      return (
+        <Box>
+          <Title>Not found</Title>
+        </Box>
+      );
+    }
+    return (
+      <Text>
+        User ID: <b>{matchedUser._id}</b> <br />
+        Username: <b>{matchedUser.username}</b>
+      </Text>
+    );
   }
 
   return (

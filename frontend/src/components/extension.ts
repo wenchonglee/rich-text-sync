@@ -1,8 +1,10 @@
 import { mergeAttributes, Node } from "@tiptap/core";
+import { ReactNodeViewRenderer } from "@tiptap/react";
 import Suggestion, { SuggestionOptions } from "@tiptap/suggestion";
 import { Node as ProseMirrorNode } from "prosemirror-model";
 import { PluginKey } from "prosemirror-state";
 import { ReactNode } from "react";
+import { Component } from "./custom";
 
 export type MentionOptions = {
   HTMLAttributes: Record<string, any>;
@@ -14,6 +16,9 @@ export const MentionPluginKey = new PluginKey("mention");
 
 export const Mention = Node.create<MentionOptions>({
   name: "mention",
+  addNodeView() {
+    return ReactNodeViewRenderer(Component);
+  },
 
   addOptions() {
     return {
