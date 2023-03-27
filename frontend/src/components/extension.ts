@@ -1,14 +1,13 @@
 import { mergeAttributes, Node } from "@tiptap/core";
+import { Node as ProseMirrorNode } from "@tiptap/pm/model";
+import { PluginKey } from "@tiptap/pm/state";
 import { ReactNodeViewRenderer } from "@tiptap/react";
 import Suggestion, { SuggestionOptions } from "@tiptap/suggestion";
-import { Node as ProseMirrorNode } from "prosemirror-model";
-import { PluginKey } from "prosemirror-state";
-import { ReactNode } from "react";
 import { Component } from "./custom";
 
 export type MentionOptions = {
   HTMLAttributes: Record<string, any>;
-  renderLabel: (props: { options: MentionOptions; node: ProseMirrorNode }) => ReactNode;
+  renderLabel: (props: { options: MentionOptions; node: ProseMirrorNode }) => string;
   suggestion: Omit<SuggestionOptions, "editor">;
 };
 
@@ -68,18 +67,20 @@ export const Mention = Node.create<MentionOptions>({
   },
 
   group: "inline",
-
   inline: true,
-
   selectable: false,
-
   atom: true,
 
+  /**
+   * parseHTML was used to find an element using this extension.
+   * addAttributes is used to extract data out of it now that we have identified the element
+   */
   addAttributes() {
     return {
       id: {
         default: null,
         parseHTML: (element) => element.getAttribute("data-id"),
+        /** By default, it would have used `id` as the attribute (i.e. <span id="abc" ...>) */
         renderHTML: (attributes) => {
           if (!attributes.id) {
             return {};
@@ -107,6 +108,9 @@ export const Mention = Node.create<MentionOptions>({
     };
   },
 
+  /**
+   * How to find elements that uses this extension
+   */
   parseHTML() {
     return [
       {
@@ -115,6 +119,9 @@ export const Mention = Node.create<MentionOptions>({
     ];
   },
 
+  /**
+   * The HTML output of this extension
+   */
   renderHTML({ node, HTMLAttributes }) {
     return [
       "span",
@@ -126,12 +133,15 @@ export const Mention = Node.create<MentionOptions>({
     ];
   },
 
-  // renderText({ node }) {
-  //   return this.options.renderLabel({
-  //     options: this.options,
-  //     node,
-  //   });
-  // },
+  /**
+   * The Text output of this extension
+   */
+  renderText({ node }) {
+    return this.options.renderLabel({
+      options: this.options,
+      node,
+    });
+  },
 
   addKeyboardShortcuts() {
     return {

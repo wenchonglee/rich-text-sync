@@ -1,5 +1,5 @@
 import { AppShell, Navbar, NavLink } from "@mantine/core";
-import { IconMessage, IconUsers } from "@tabler/icons";
+import { IconMessage, IconUsers } from "@tabler/icons-react";
 import { Link, Outlet } from "@tanstack/react-location";
 
 function App() {

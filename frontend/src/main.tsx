@@ -1,5 +1,5 @@
 import { Global, MantineProvider } from "@mantine/core";
-import { NotificationsProvider } from "@mantine/notifications";
+import { Notifications } from "@mantine/notifications";
 import { Navigate, ReactLocation, Router } from "@tanstack/react-location";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import React from "react";
@@ -30,39 +30,38 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
             },
           })}
         />
-        <NotificationsProvider position="top-center" autoClose={8000}>
-          <Router
-            location={reactLocation}
-            routes={[
-              {
-                path: "/",
-                element: <Navigate to="/posts" />,
-              },
-              {
-                path: "/users/:userId",
-                element: <UsersPage />,
-              },
-              {
-                path: "/users",
-                element: <UsersPage />,
-              },
-              {
-                path: "/posts/create",
-                element: <CreatePostPage />,
-              },
-              {
-                path: "/posts/:postId",
-                element: <PostPage />,
-              },
-              {
-                path: "/posts",
-                element: <PostsPage />,
-              },
-            ]}
-          >
-            <App />
-          </Router>
-        </NotificationsProvider>
+        <Notifications position="top-center" autoClose={8000} />
+        <Router
+          location={reactLocation}
+          routes={[
+            {
+              path: "/",
+              element: <Navigate to="/posts" />,
+            },
+            {
+              path: "/users/:userId",
+              element: <UsersPage />,
+            },
+            {
+              path: "/users",
+              element: <UsersPage />,
+            },
+            {
+              path: "/posts/create",
+              element: <CreatePostPage />,
+            },
+            {
+              path: "/posts/:postId",
+              element: <PostPage />,
+            },
+            {
+              path: "/posts",
+              element: <PostsPage />,
+            },
+          ]}
+        >
+          <App />
+        </Router>
       </MantineProvider>
     </QueryClientProvider>
   </React.StrictMode>

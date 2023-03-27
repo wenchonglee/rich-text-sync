@@ -1,6 +1,6 @@
 import { ActionIcon, Box, Divider, Loader, Stack, Text, TextInput, Title } from "@mantine/core";
 import { showNotification } from "@mantine/notifications";
-import { IconTrash } from "@tabler/icons";
+import { IconTrash } from "@tabler/icons-react";
 import { useMatch } from "@tanstack/react-location";
 import { FocusEventHandler, KeyboardEventHandler, useRef, useState } from "react";
 import { useCreateUser, useDeleteUser, User, useReadUsers, useUpdateUser } from "../api/users";

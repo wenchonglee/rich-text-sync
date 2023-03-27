@@ -4,8 +4,9 @@ FROM node:18-alpine as fe-build
 COPY . /app
 WORKDIR /app/frontend
 
-RUN yarn install --frozen-lockfile
-RUN yarn build 
+RUN npm i -g pnpm
+RUN pnpm install --frozen-lockfile
+RUN pnpm build
 
 # Copy static files to backend, retrieve dependencies, and start the server
 FROM denoland/deno
