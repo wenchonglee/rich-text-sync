@@ -112,3 +112,21 @@ const postsWithUser = postCollection.find({ "references.id": userId, "references
 Because the sync is not expected to be timely and we can tolerate desyncs, this approach will be eventually consistent without performance costs when creating/updating posts.
  
 
+
+## Other considerations to go through
+
+- Access control
+  - Is it okay to assume that the citation summary or username is always readable by users who don't have access to the specific records?
+- What if we want to change the contract?
+  - Renaming attributes, e.g. if we already had `data-id` for mentions but want to change to `data-user-id`
+    - This should be fine as we can still find all of them, but the client needs be able to parse both until all data patches are complete
+  - Adding attributes, e.g. adding `data-user-description` to mentions
+    - Patching this will be more complex
+    - Otherwise, the client can handle empty values and be fine with cases where descriptions are empty
+  - Removing attributes, this is unlikely
+    - Client can start by ignoring these attributes, patch jobs may not even be necessary 
+- What if the reference is deleted?
+  - Instead of updating the attributes, we can mark it as deleted (e.g. add an attribute `data-state="removed"`)
+  - Using this, mention nodes no longer links to the non-existent user, and citation nodes can append to the summary with "[Removed]"
+
+
