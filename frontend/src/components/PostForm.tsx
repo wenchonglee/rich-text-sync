@@ -23,7 +23,25 @@ export const PostForm = ({ post }: { post?: PostType }) => {
       }),
       CitationMark,
     ],
-    content: post?.content,
+    content:
+      post?.content ??
+      `<div 
+      data-type="citation"
+      data-id="123"
+      data-summary="John doe's residential address: Sesame street 123"
+      data-user-id="6396f18b6a3a195c2e4d772b"
+      record-type="address">
+        test
+      </div>
+      <div 
+      data-type="citation"
+      data-id="432"
+      data-summary="Test address"
+      data-user-id="6396f18b6a3a195c2e4d772b"
+      record-type="address">
+        test2
+      </div>
+      <p>Abcdefg</p>`,
   });
 
   const handleSubmit = () => {
@@ -49,13 +67,25 @@ export const PostForm = ({ post }: { post?: PostType }) => {
         <RichTextEditor editor={editor}>
           {editor && (
             <BubbleMenu editor={editor}>
-              <TextInput
+              <IconBlockquote
+                onClick={() =>
+                  editor
+                    .chain()
+                    .focus()
+                    .setCitation({
+                      "data-summary": "test",
+                      "data-id": "123213",
+                    })
+                    .run()
+                }
+              />
+              {/* <TextInput
                 icon={<IconBlockquote />}
                 placeholder="citation"
                 onKeyDown={(e) => {
                   if (e.code === "Enter") editor.chain().focus().setCitation(e.currentTarget.value).run();
                 }}
-              />
+              /> */}
             </BubbleMenu>
           )}
 
@@ -91,17 +121,21 @@ export const PostForm = ({ post }: { post?: PostType }) => {
           <RichTextEditor.Content />
 
           <Box px="md" py="xs">
-            {editor && editor.storage.citation.citations.length > 0 && (
+            {editor && (
               <>
                 <Text fw="bold"> Citations </Text>
                 <Text>
-                  {editor.storage.citation.citations.map((value: string, index: number) => {
-                    return (
-                      <p>
-                        {index + 1}. {value}
-                      </p>
-                    );
-                  })}
+                  {/* {console.log(editor.storage.citation.citations)} */}
+                  {/* {editor.storage.citation.citations.map( */}
+                  {editor.storage.citation
+                    .getCitations()
+                    .map((value: any, index: number) => {
+                      return (
+                        <p key={index}>
+                          {index + 1}. {value["data-summary"]}
+                        </p>
+                      );
+                    })}
                 </Text>
               </>
             )}
@@ -109,6 +143,14 @@ export const PostForm = ({ post }: { post?: PostType }) => {
         </RichTextEditor>
         <Button size="xs" onClick={handleSubmit} m="md">
           {isCreate ? "Create post" : "Edit post"}
+        </Button>
+
+        <Button
+          size="xs"
+          onClick={() => console.log(editor?.storage.citation.getCitations())}
+          m="md"
+        >
+          Print citations
         </Button>
       </div>
 
