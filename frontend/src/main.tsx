@@ -19,50 +19,52 @@ const queryClient = new QueryClient({
 const reactLocation = new ReactLocation();
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
-  <React.StrictMode>
-    <QueryClientProvider client={queryClient}>
-      <MantineProvider withNormalizeCSS withGlobalStyles theme={{ colorScheme: "dark" }}>
-        <Global
-          styles={(theme) => ({
-            "span[data-type='mention']": {
-              fontWeight: 500,
-              color: theme.colors.blue[3],
-            },
-          })}
-        />
-        <Notifications position="top-center" autoClose={8000} />
-        <Router
-          location={reactLocation}
-          routes={[
-            {
-              path: "/",
-              element: <Navigate to="/posts" />,
-            },
-            {
-              path: "/users/:userId",
-              element: <UsersPage />,
-            },
-            {
-              path: "/users",
-              element: <UsersPage />,
-            },
-            {
-              path: "/posts/create",
-              element: <CreatePostPage />,
-            },
-            {
-              path: "/posts/:postId",
-              element: <PostPage />,
-            },
-            {
-              path: "/posts",
-              element: <PostsPage />,
-            },
-          ]}
-        >
-          <App />
-        </Router>
-      </MantineProvider>
-    </QueryClientProvider>
-  </React.StrictMode>
+  <QueryClientProvider client={queryClient}>
+    <MantineProvider
+      withNormalizeCSS
+      withGlobalStyles
+      theme={{ colorScheme: "dark" }}
+    >
+      <Global
+        styles={(theme) => ({
+          "span[data-type='mention']": {
+            fontWeight: 500,
+            color: theme.colors.blue[3],
+          },
+        })}
+      />
+      <Notifications position="top-center" autoClose={8000} />
+      <Router
+        location={reactLocation}
+        routes={[
+          {
+            path: "/",
+            element: <Navigate to="/posts" />,
+          },
+          {
+            path: "/users/:userId",
+            element: <UsersPage />,
+          },
+          {
+            path: "/users",
+            element: <UsersPage />,
+          },
+          {
+            path: "/posts/create",
+            element: <CreatePostPage />,
+          },
+          {
+            path: "/posts/:postId",
+            element: <PostPage />,
+          },
+          {
+            path: "/posts",
+            element: <PostsPage />,
+          },
+        ]}
+      >
+        <App />
+      </Router>
+    </MantineProvider>
+  </QueryClientProvider>
 );

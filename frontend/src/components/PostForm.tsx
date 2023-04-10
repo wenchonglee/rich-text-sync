@@ -5,7 +5,8 @@ import { useNavigate } from "@tanstack/react-location";
 import { BubbleMenu, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import { Post as PostType, useCreatePost } from "../api/posts";
-import { CitationMark } from "../citation/extension";
+import { CitationNode } from "../citation/extension";
+import { DocumentWithCitation, Root } from "../citation/root";
 import { Mention } from "./extension";
 import { suggestion } from "./suggestion";
 
@@ -16,32 +17,36 @@ export const PostForm = ({ post }: { post?: PostType }) => {
 
   const editor = useEditor({
     extensions: [
-      StarterKit,
+      Root,
+      DocumentWithCitation,
+      StarterKit.configure({
+        document: false,
+      }),
       Link,
       Mention.configure({
         suggestion,
       }),
-      CitationMark,
+      CitationNode,
     ],
     content:
-      post?.content ??
-      `<div 
-      data-type="citation"
-      data-id="123"
-      data-summary="John doe's residential address: Sesame street 123"
-      data-user-id="6396f18b6a3a195c2e4d772b"
-      record-type="address">
-        test
-      </div>
-      <div 
-      data-type="citation"
-      data-id="432"
-      data-summary="Test address"
-      data-user-id="6396f18b6a3a195c2e4d772b"
-      record-type="address">
-        test2
-      </div>
-      <p>Abcdefg</p>`,
+      post?.content ?? // `<div[data-type="root"]><p>test</p></div>`, //`<div data-type="root"></div>`,
+      `<div data-type="root"><div
+    data-type="citation"
+    data-id="123"
+    data-summary="John doe's residential address: Sesame street 123"
+    data-user-id="6396f18b6a3a195c2e4d772b"
+    record-type="address">
+      test
+    </div>
+    <div
+    data-type="citation"
+    data-id="432"
+    data-summary="Test address"
+    data-user-id="6396f18b6a3a195c2e4d772b"
+    record-type="address">
+      test2
+    </div>
+    <p>Abcdefg</p></div>`,
   });
 
   const handleSubmit = () => {
@@ -63,6 +68,21 @@ export const PostForm = ({ post }: { post?: PostType }) => {
 
   return (
     <>
+      {editor && (
+        <IconBlockquote
+          onClick={() =>
+            editor
+              .chain()
+              .focus()
+              .setRootCitation({
+                "data-summary": "test",
+                "data-id": "123213",
+              })
+              .run()
+          }
+        />
+      )}
+
       <div>
         <RichTextEditor editor={editor}>
           {editor && (
