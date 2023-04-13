@@ -31,6 +31,24 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
             fontWeight: 500,
             color: theme.colors.blue[3],
           },
+          ".ProseMirror div[data-type='citation']": {
+            textDecoration: "underline dotted",
+          },
+          ".ProseMirror sup": {
+            fontWeight: 600,
+            height: 14,
+            width: 14,
+            color: theme.fn.variant({ variant: "filled", color: "cyan" }).color,
+            background: theme.fn.variant({ variant: "filled", color: "cyan" })
+              .background,
+            display: "inline-flex",
+            justifyContent: "center",
+            alignItems: "center",
+            borderRadius: "4px",
+            margin: "0px 2px",
+            fontSize: "10px",
+            cursor: "default",
+          },
         })}
       />
       <Notifications position="top-center" autoClose={8000} />

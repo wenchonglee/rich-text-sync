@@ -1,4 +1,4 @@
-import { Attributes, mergeAttributes, Node } from "@tiptap/core";
+import { Attributes, Mark, mergeAttributes, Node } from "@tiptap/core";
 
 type CitationStore = {
   "data-summary": string | null;
@@ -47,20 +47,36 @@ export const CitationNode = Node.create<
   }
 >({
   name: "citation",
-  content: "inline*",
-  group: "block",
+
+  // content: "inline*",
+  // group: "block",
+
+  // group: "inline",
+  // inline: true,
+  // selectable: false,
+  // atom: true,
+
+  group: "inline",
+  inline: true,
+  content: "text*",
 
   addAttributes() {
     return citationAddAttributes;
   },
 
   parseHTML() {
-    return [{ tag: `div[data-type="citation"]` }];
+    return [{ tag: `span[data-type="citation"]` }];
+  },
+
+  addOptions() {
+    return {
+      HTMLAttributes: {},
+    };
   },
 
   renderHTML({ HTMLAttributes }) {
     return [
-      "div",
+      "span",
       mergeAttributes(this.options.HTMLAttributes, HTMLAttributes),
       0,
     ];
@@ -68,7 +84,10 @@ export const CitationNode = Node.create<
 
   addNodeView() {
     return ({ node }) => {
-      const dom = document.createElement("div");
+      const dom = document.createElement("span");
+      for (const key of Object.keys(node.attrs)) {
+        dom.setAttribute(key, node.attrs[key]);
+      }
       const container = document.createElement("span");
       const citationMark = document.createElement("sup");
 
@@ -77,8 +96,10 @@ export const CitationNode = Node.create<
         .getCitations()
         .findIndex((item: { "data-id": any }) => item["data-id"] === id);
 
-      citationMark.innerHTML = `[${index + 1}]`;
+      // citationMark.innerHTML = `[${index + 1}]`;
+      citationMark.innerHTML = `${index + 1}`;
       citationMark.contentEditable = "false";
+      citationMark.setAttribute("title", node.attrs["data-summary"]);
 
       dom.append(container, citationMark);
 
@@ -121,9 +142,24 @@ export const CitationNode = Node.create<
     return {
       setCitation:
         (citation) =>
-        ({ commands }) => {
+        ({ commands, editor, state, tr, view }) => {
+          const { from, to } = view.state.selection;
+          const text = state.doc.textBetween(from, to, "");
+          const textNode = editor.schema.text(text);
+          const citationNode = editor.schema.nodes.citation
+            .create(
+              {
+                ...citation,
+                "data-type": "citation",
+              },
+              textNode
+            )
+            .toJSON();
+
+          return commands.insertContent(citationNode);
+
           // this.storage.citations.push({ ...citation });
-          return commands.setNode(this.name, { ...citation });
+          // return commands.setNode(this.name, { ...citation });
         },
       //   toggleCitation:
       //     () =>

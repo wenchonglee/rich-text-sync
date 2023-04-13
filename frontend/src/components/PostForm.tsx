@@ -17,11 +17,12 @@ export const PostForm = ({ post }: { post?: PostType }) => {
 
   const editor = useEditor({
     extensions: [
-      Root,
-      DocumentWithCitation,
-      StarterKit.configure({
-        document: false,
-      }),
+      StarterKit,
+      // Root,
+      // DocumentWithCitation,
+      // StarterKit.configure({
+      //   document: false,
+      // }),
       Link,
       Mention.configure({
         suggestion,
@@ -30,23 +31,35 @@ export const PostForm = ({ post }: { post?: PostType }) => {
     ],
     content:
       post?.content ?? // `<div[data-type="root"]><p>test</p></div>`, //`<div data-type="root"></div>`,
-      `<div data-type="root"><div
-    data-type="citation"
-    data-id="123"
-    data-summary="John doe's residential address: Sesame street 123"
-    data-user-id="6396f18b6a3a195c2e4d772b"
-    record-type="address">
-      test
-    </div>
-    <div
-    data-type="citation"
-    data-id="432"
-    data-summary="Test address"
-    data-user-id="6396f18b6a3a195c2e4d772b"
-    record-type="address">
-      test2
-    </div>
-    <p>Abcdefg</p></div>`,
+      // `<span data-type="citation"
+      //  data-id="1"
+      //  data-summary="Cushing, P.E. (2008). "Spiders (Arachnida: Araneae)". In Capinera, J.L. (ed.). Encyclopedia of Entomology. Springer. p. 3496">
+      //  test asda assad s
+      //  </span> testabcdefg`,
+      `<p><b>Spiders</b> (order <b>Araneae</b>) are air-breathing arthropods that have eight legs, chelicerae <span data-type="citation"
+    data-id="1"
+    data-summary="Cushing, P.E. (2008). "Spiders (Arachnida: Araneae)". In Capinera, J.L. (ed.). Encyclopedia of Entomology. Springer. p. 3496">
+    with fangs generally able to inject venom,
+    </span> and <span data-type="citation"
+    data-id="2"
+    data-summary="Selden, P.A. & Shear, W.A. (December 2008). "Fossil evidence for the origin of spider spinnerets">
+    spinnerets that extrude silk.
+    </span> </p>
+
+    <span data-type="citation"
+    data-id="3"
+    data-summary="Sebastin, P.A.; Peter, K.V., eds. (2009). Spiders of India. Universities Press/Orient Blackswan">
+    They are the largest order of arachnids and rank seventh in total species diversity among all orders of organisms.
+    </span>
+
+    Spiders are found worldwide on every continent except for Antarctica, and have become established in nearly every land habitat.
+
+    <span data-type="citation"
+    data-id="4"
+    data-summary="World Spider Catalog">
+    As of August 2022, 50,356 spider species in 132 families have been recorded by taxonomists.
+    </span>
+     However, there has been debate among scientists about how families should be classified, with over 20 different classifications proposed since 1900.`,
   });
 
   const handleSubmit = () => {
@@ -148,12 +161,12 @@ export const PostForm = ({ post }: { post?: PostType }) => {
                   {/* {console.log(editor.storage.citation.citations)} */}
                   {/* {editor.storage.citation.citations.map( */}
                   {editor.storage.citation
-                    .getCitations()
+                    ?.getCitations()
                     .map((value: any, index: number) => {
                       return (
-                        <p key={index}>
-                          {index + 1}. {value["data-summary"]}
-                        </p>
+                        <div key={index} className="ProseMirror">
+                          <sup>{index + 1}</sup> {value["data-summary"]}
+                        </div>
                       );
                     })}
                 </Text>
