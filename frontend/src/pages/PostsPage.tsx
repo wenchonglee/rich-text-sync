@@ -12,10 +12,10 @@ export const PostsPage = () => {
   }
 
   return (
-    <Box>
+    <Box maw="1000px" m="0 auto">
       <Title>Posts</Title>
 
-      <Button component={Link} to="/posts/create" my="lg">
+      <Button component={Link} to="/posts/new" my="lg">
         Create new post
       </Button>
 

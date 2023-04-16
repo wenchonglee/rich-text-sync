@@ -14,7 +14,7 @@ export const UsersPage = () => {
   }
 
   if (params.userId) {
-    const matchedUser = data.find((user) => user._id === params.userId);
+    const matchedUser = data.find((user) => user.id === params.userId);
     if (!matchedUser) {
       return (
         <Box>
@@ -24,7 +24,7 @@ export const UsersPage = () => {
     }
     return (
       <Text>
-        User ID: <b>{matchedUser._id}</b> <br />
+        User ID: <b>{matchedUser.id}</b> <br />
         Username: <b>{matchedUser.username}</b>
       </Text>
     );
@@ -39,7 +39,7 @@ export const UsersPage = () => {
 
       <Stack>
         {data.map((user) => (
-          <SaveTextInput key={user._id} user={user} />
+          <SaveTextInput key={user.id} user={user} />
         ))}
       </Stack>
     </Box>
@@ -61,7 +61,7 @@ const CreateUser = () => {
             }
 
             showNotification({
-              title: `Successfully created user ID: ${response._id}`,
+              title: `Successfully created user ID: ${response.id}`,
               message: `Username: ${response.username}`,
               color: "teal",
             });
@@ -90,13 +90,13 @@ const SaveTextInput = (props: SaveTextInputProps) => {
     if (e.target.value !== user.username) {
       mutate(
         {
-          userId: user._id,
+          userId: user.id,
           username: e.target.value,
         },
         {
           onSuccess: () => {
             showNotification({
-              title: `Successfully updated user ID: ${user._id}`,
+              title: `Successfully updated user ID: ${user.id}`,
               message: `Username from ${user.username} -> ${e.target.value}`,
               color: "teal",
             });
@@ -127,11 +127,11 @@ const SaveTextInput = (props: SaveTextInputProps) => {
         size="sm"
         onClick={() => {
           deleteUser(
-            { userId: user._id },
+            { userId: user.id },
             {
               onSuccess: () => {
                 showNotification({
-                  title: `Successfully deleted user ID: ${user._id}`,
+                  title: `Successfully deleted user ID: ${user.id}`,
                   message: ``,
                   color: "teal",
                 });
@@ -147,7 +147,7 @@ const SaveTextInput = (props: SaveTextInputProps) => {
   return (
     <TextInput
       maw={400}
-      label={user._id}
+      label={user.id}
       defaultValue={user.username}
       onFocus={handleOnFocus}
       onBlur={handleOnBlur}

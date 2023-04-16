@@ -1,12 +1,14 @@
-import { Box, Button, Code, Input, Text, TextInput } from "@mantine/core";
+import { Box, Button, Input, Text, TextInput } from "@mantine/core";
+import { Prism } from "@mantine/prism";
 import { Link, RichTextEditor } from "@mantine/tiptap";
 import { IconBlockquote } from "@tabler/icons-react";
 import { useNavigate } from "@tanstack/react-location";
 import { BubbleMenu, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
+import parser from "prettier/parser-html";
+import { format } from "prettier/standalone";
 import { Post as PostType, useCreatePost } from "../api/posts";
 import { CitationNode } from "../citation/extension";
-import { DocumentWithCitation, Root } from "../citation/root";
 import { Mention } from "./extension";
 import { suggestion } from "./suggestion";
 
@@ -31,11 +33,6 @@ export const PostForm = ({ post }: { post?: PostType }) => {
     ],
     content:
       post?.content ?? // `<div[data-type="root"]><p>test</p></div>`, //`<div data-type="root"></div>`,
-      // `<span data-type="citation"
-      //  data-id="1"
-      //  data-summary="Cushing, P.E. (2008). "Spiders (Arachnida: Araneae)". In Capinera, J.L. (ed.). Encyclopedia of Entomology. Springer. p. 3496">
-      //  test asda assad s
-      //  </span> testabcdefg`,
       `<p><b>Spiders</b> (order <b>Araneae</b>) are air-breathing arthropods that have eight legs, chelicerae <span data-type="citation"
     data-id="1"
     data-summary="Cushing, P.E. (2008). "Spiders (Arachnida: Araneae)". In Capinera, J.L. (ed.). Encyclopedia of Entomology. Springer. p. 3496">
@@ -81,7 +78,7 @@ export const PostForm = ({ post }: { post?: PostType }) => {
 
   return (
     <>
-      {editor && (
+      {/* {editor && (
         <IconBlockquote
           onClick={() =>
             editor
@@ -94,31 +91,27 @@ export const PostForm = ({ post }: { post?: PostType }) => {
               .run()
           }
         />
-      )}
+      )} */}
 
       <div>
         <RichTextEditor editor={editor}>
           {editor && (
             <BubbleMenu editor={editor}>
-              <IconBlockquote
-                onClick={() =>
-                  editor
-                    .chain()
-                    .focus()
-                    .setCitation({
-                      "data-summary": "test",
-                      "data-id": "123213",
-                    })
-                    .run()
-                }
-              />
-              {/* <TextInput
+              <TextInput
                 icon={<IconBlockquote />}
-                placeholder="citation"
+                placeholder="Enter a citation"
                 onKeyDown={(e) => {
-                  if (e.code === "Enter") editor.chain().focus().setCitation(e.currentTarget.value).run();
+                  if (e.code === "Enter")
+                    editor
+                      .chain()
+                      .focus()
+                      .setCitation({
+                        "data-summary": e.currentTarget.value,
+                        "data-id": "123213",
+                      })
+                      .run();
                 }}
-              /> */}
+              />
             </BubbleMenu>
           )}
 
@@ -158,40 +151,36 @@ export const PostForm = ({ post }: { post?: PostType }) => {
               <>
                 <Text fw="bold"> Citations </Text>
                 <Text>
-                  {/* {console.log(editor.storage.citation.citations)} */}
-                  {/* {editor.storage.citation.citations.map( */}
-                  {editor.storage.citation
-                    ?.getCitations()
-                    .map((value: any, index: number) => {
-                      return (
-                        <div key={index} className="ProseMirror">
-                          <sup>{index + 1}</sup> {value["data-summary"]}
-                        </div>
-                      );
-                    })}
+                  {editor.storage.citation?.getCitations().map((value: any, index: number) => {
+                    return (
+                      <div key={index} className="ProseMirror">
+                        <sup>{index + 1}</sup> {value["data-summary"]}
+                      </div>
+                    );
+                  })}
                 </Text>
               </>
             )}
           </Box>
         </RichTextEditor>
+
         <Button size="xs" onClick={handleSubmit} m="md">
           {isCreate ? "Create post" : "Edit post"}
-        </Button>
-
-        <Button
-          size="xs"
-          onClick={() => console.log(editor?.storage.citation.getCitations())}
-          m="md"
-        >
-          Print citations
         </Button>
       </div>
 
       <Input.Wrapper label="HTML" m="md">
-        <Code block>{editor?.getHTML()}</Code>
+        <Prism language="markup">
+          {format(editor?.getHTML() ?? "", {
+            parser: "html",
+            plugins: [parser],
+            printWidth: 120,
+          })}
+        </Prism>
       </Input.Wrapper>
+
       <Input.Wrapper label="JSON" m="md">
-        <Code block>{JSON.stringify(editor?.getJSON(), null, 2)}</Code>
+        <Prism language="json">{JSON.stringify(editor?.getJSON() ?? {}, null, 2)}</Prism>
       </Input.Wrapper>
     </>
   );

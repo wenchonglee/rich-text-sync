@@ -55,4 +55,5 @@ build/
 !**/src/test/**/build/
 
 .env
-
+docker-compose.override.yml
+nginx/

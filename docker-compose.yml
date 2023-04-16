@@ -1,0 +1,44 @@
+services:
+  frontend:
+    container_name: frontend
+    build: frontend
+    ports:
+      - 3000:80
+    networks:
+      - service-network
+    restart: always
+  
+  backend:
+    container_name: backend
+    depends_on:
+      - mongodb
+    build: backend
+    environment:
+      - MONGO_HOST=mongo
+    ports:
+      - 8080:8080
+    networks:
+      - service-network
+    restart: always
+  
+  mongodb:
+    container_name: mongo
+    image: bitnami/mongodb:6.0.5
+    # replicaset required for changestream to be enabled
+    environment:
+      - MONGODB_REPLICA_SET_MODE=primary
+      - ALLOW_EMPTY_PASSWORD=yes
+    ports:
+      - 27017:27017
+    volumes:
+      - mongo:/data/db
+    networks:
+      - service-network
+    restart: always
+
+networks:
+  service-network:
+    driver: bridge
+
+volumes:
+  mongo:

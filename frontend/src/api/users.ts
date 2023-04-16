@@ -2,7 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Axios } from "./axios";
 
 export type User = {
-  _id: string;
+  id: string;
   username: string;
 };
 

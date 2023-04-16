@@ -7,7 +7,7 @@ function App() {
     <AppShell
       padding="md"
       navbar={
-        <Navbar width={{ base: 300 }} height="100%" p="xs">
+        <Navbar width={{ base: 240 }} height="100%" p="xs">
           <Navbar.Section mt="xs">
             <NavLink label="Users" icon={<IconUsers size={20} />} component={Link} to="/users" />
             <NavLink label="Posts" icon={<IconMessage size={20} />} component={Link} to="/posts" />

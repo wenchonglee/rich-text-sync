@@ -14,7 +14,7 @@ export const MentionList = forwardRef((props: SuggestionProps, ref) => {
     const item = props.items[index];
 
     if (item) {
-      props.command({ id: item._id, label: item.username });
+      props.command({ id: item.id, label: item.username });
     }
   };
 

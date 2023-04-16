@@ -1,4 +1,4 @@
-import { Attributes, Mark, mergeAttributes, Node } from "@tiptap/core";
+import { Attributes, mergeAttributes, Node } from "@tiptap/core";
 
 type CitationStore = {
   "data-summary": string | null;
@@ -75,11 +75,7 @@ export const CitationNode = Node.create<
   },
 
   renderHTML({ HTMLAttributes }) {
-    return [
-      "span",
-      mergeAttributes(this.options.HTMLAttributes, HTMLAttributes),
-      0,
-    ];
+    return ["span", mergeAttributes(this.options.HTMLAttributes, HTMLAttributes), 0];
   },
 
   addNodeView() {
@@ -92,9 +88,7 @@ export const CitationNode = Node.create<
       const citationMark = document.createElement("sup");
 
       const id = node.attrs["data-id"];
-      const index = this.storage
-        .getCitations()
-        .findIndex((item: { "data-id": any }) => item["data-id"] === id);
+      const index = this.storage.getCitations().findIndex((item: { "data-id": any }) => item["data-id"] === id);
 
       // citationMark.innerHTML = `[${index + 1}]`;
       citationMark.innerHTML = `${index + 1}`;
