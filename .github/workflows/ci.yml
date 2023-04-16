@@ -7,14 +7,41 @@ on:
 
 env:
   REGISTRY: "registry.digitalocean.com/wenchonglee"
-  IMAGE_NAME: "rich-text-sync"
-  TAG: "latest"
 
 jobs:
   build_and_push:
     name: Build and start
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout main
+        uses: actions/checkout@v2
+
+      - name: Build frontend image
+        run: docker build -t rich-text-sync-frontend:latest frontend
+
+      - name: Tag frontend image
+        run: docker tag rich-text-sync-frontend ${{ env.REGISTRY }}/rich-text-sync-frontend:latest
+
+      - name: Build backend image
+        run: docker build -t rich-text-sync-backend:latest backend
+
+      - name: Tag backend image
+        run: docker tag rich-text-sync-backend ${{ env.REGISTRY }}/rich-text-sync-backend:latest
+
+      - name: Install `doctl`
+        uses: digitalocean/action-doctl@v2
+        with:
+          token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+
+      - name: Log in to Digital Ocean Container Registry
+        run: doctl registry login --expiry-seconds 600
+
+      - name: Push frontend image to Digital Ocean Container Registry
+        run: docker push ${{ env.REGISTRY }}/rich-text-sync-frontend:latest
+
+      - name: Push backend image to Digital Ocean Container Registry
+        run: docker push ${{ env.REGISTRY }}/rich-text-sync-backend:latest
+
       - name: Deploy via SSH
         uses: appleboy/ssh-action@master
         with:
@@ -27,7 +54,7 @@ jobs:
             git pull
 
             # Rebuild images images
-            docker-compose build
+            # docker-compose build
 
             # Start services
             # NOTE: there exists a docker-compose.override.yml on the droplet that handles https
