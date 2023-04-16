@@ -3,9 +3,7 @@
 <!-- docker run -p 80:3000 --env-file ./backend/.env rich-text-sync -->
 <!-- docker build -t rich-text-sync:latest . -->
 
-https://droplet.wenchonglee.dev/
-
-To run locally, run
+To run locally with everything dockerized, run
 
 ```sh
 docker-compose up -d
