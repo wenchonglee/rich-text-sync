@@ -17,16 +17,10 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Build frontend image
-        run: docker build -t rich-text-sync-frontend:latest frontend
-
-      - name: Tag frontend image
-        run: docker tag rich-text-sync-frontend ${{ env.REGISTRY }}/rich-text-sync-frontend:latest
+        run: docker build -t ${{ env.REGISTRY }}/rich-text-sync:frontend frontend
 
       - name: Build backend image
-        run: docker build -t rich-text-sync-backend:latest backend
-
-      - name: Tag backend image
-        run: docker tag rich-text-sync-backend ${{ env.REGISTRY }}/rich-text-sync-backend:latest
+        run: docker build -t ${{ env.REGISTRY }}/rich-text-sync:backend backend
 
       - name: Install `doctl`
         uses: digitalocean/action-doctl@v2
@@ -37,10 +31,10 @@ jobs:
         run: doctl registry login --expiry-seconds 600
 
       - name: Push frontend image to Digital Ocean Container Registry
-        run: docker push ${{ env.REGISTRY }}/rich-text-sync-frontend:latest
+        run: docker push ${{ env.REGISTRY }}/rich-text-sync:frontend
 
       - name: Push backend image to Digital Ocean Container Registry
-        run: docker push ${{ env.REGISTRY }}/rich-text-sync-backend:latest
+        run: docker push ${{ env.REGISTRY }}/rich-text-sync:backend
 
       - name: Deploy via SSH
         uses: appleboy/ssh-action@master
