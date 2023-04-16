@@ -52,7 +52,7 @@ jobs:
 
             # Start services
             # NOTE: there exists a docker-compose.override.yml on the droplet that handles https
-            docker-compose up -d 
+            docker-compose up -d --no-build
 
             # Prune and cleanup dangling images
             docker image prune -a --force --filter "until=24h"
