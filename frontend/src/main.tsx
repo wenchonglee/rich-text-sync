@@ -19,22 +19,28 @@ const reactLocation = new ReactLocation();
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <QueryClientProvider client={queryClient}>
-    <MantineProvider withNormalizeCSS withGlobalStyles theme={{ colorScheme: "dark" }}>
+    <MantineProvider
+      withNormalizeCSS
+      withGlobalStyles
+      theme={{ colorScheme: "dark" }}
+    >
       <Global
         styles={(theme) => ({
           "span[data-type='mention']": {
             fontWeight: 500,
             color: theme.colors.blue[3],
           },
-          ".ProseMirror div[data-type='citation']": {
-            textDecoration: "underline dotted",
+          ".ProseMirror span[data-type='citation']": {
+            textDecoration: `underline dotted 1px`,
+            textDecorationColor: theme.colors.gray[6],
           },
           ".ProseMirror sup": {
             fontWeight: 600,
             height: 14,
             width: 14,
             color: theme.fn.variant({ variant: "filled", color: "cyan" }).color,
-            background: theme.fn.variant({ variant: "filled", color: "cyan" }).background,
+            background: theme.fn.variant({ variant: "filled", color: "cyan" })
+              .background,
             display: "inline-flex",
             justifyContent: "center",
             alignItems: "center",

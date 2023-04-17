@@ -1,5 +1,5 @@
 import { mergeAttributes, Node } from "@tiptap/core";
-import { citationAddAttributes } from "./extension";
+import { citationAddAttributes } from "./citationNode";
 
 // https://discuss.prosemirror.net/t/root-custom-node-as-wrapper-around-blocks/3418
 export const DocumentWithCitation = Node.create({
@@ -49,23 +49,3 @@ export const Root = Node.create({
     };
   },
 });
-
-// export const CustomExtension = Extension.create({
-//   name: "test",
-
-//   addProseMirrorPlugins() {
-//     return [
-//       new Plugin({
-//         key: new PluginKey("some test"),
-//         props: {
-//           attributes: (a) => {
-//             console.log(a);
-//             return {
-//               ahhh: "test",
-//             };
-//           },
-//         },
-//       }),
-//     ];
-//   },
-// });

@@ -1,16 +1,13 @@
 import { Box, Button, Input, Text, TextInput } from "@mantine/core";
 import { Prism } from "@mantine/prism";
-import { Link, RichTextEditor } from "@mantine/tiptap";
+import { RichTextEditor } from "@mantine/tiptap";
 import { IconBlockquote } from "@tabler/icons-react";
 import { useNavigate } from "@tanstack/react-location";
 import { BubbleMenu, useEditor } from "@tiptap/react";
-import StarterKit from "@tiptap/starter-kit";
 import parser from "prettier/parser-html";
 import { format } from "prettier/standalone";
 import { Post as PostType, useCreatePost } from "../api/posts";
-import { CitationNode } from "../citation/extension";
-import { Mention } from "./extension";
-import { suggestion } from "./suggestion";
+import { extensions } from "../editor/extensions";
 
 export const PostForm = ({ post }: { post?: PostType }) => {
   const { mutate } = useCreatePost();
@@ -18,19 +15,7 @@ export const PostForm = ({ post }: { post?: PostType }) => {
   const isCreate = !post;
 
   const editor = useEditor({
-    extensions: [
-      StarterKit,
-      // Root,
-      // DocumentWithCitation,
-      // StarterKit.configure({
-      //   document: false,
-      // }),
-      Link,
-      Mention.configure({
-        suggestion,
-      }),
-      CitationNode,
-    ],
+    extensions,
     content:
       post?.content ?? // `<div[data-type="root"]><p>test</p></div>`, //`<div data-type="root"></div>`,
       `<p><b>Spiders</b> (order <b>Araneae</b>) are air-breathing arthropods that have eight legs, chelicerae <span data-type="citation"
@@ -78,21 +63,6 @@ export const PostForm = ({ post }: { post?: PostType }) => {
 
   return (
     <>
-      {/* {editor && (
-        <IconBlockquote
-          onClick={() =>
-            editor
-              .chain()
-              .focus()
-              .setRootCitation({
-                "data-summary": "test",
-                "data-id": "123213",
-              })
-              .run()
-          }
-        />
-      )} */}
-
       <div>
         <RichTextEditor editor={editor}>
           {editor && (
@@ -151,13 +121,15 @@ export const PostForm = ({ post }: { post?: PostType }) => {
               <>
                 <Text fw="bold"> Citations </Text>
                 <Text>
-                  {editor.storage.citation?.getCitations().map((value: any, index: number) => {
-                    return (
-                      <div key={index} className="ProseMirror">
-                        <sup>{index + 1}</sup> {value["data-summary"]}
-                      </div>
-                    );
-                  })}
+                  {editor.storage.citation
+                    ?.getCitations()
+                    .map((value: any, index: number) => {
+                      return (
+                        <div key={index} className="ProseMirror">
+                          <sup>{index + 1}</sup> {value["data-summary"]}
+                        </div>
+                      );
+                    })}
                 </Text>
               </>
             )}
@@ -180,7 +152,9 @@ export const PostForm = ({ post }: { post?: PostType }) => {
       </Input.Wrapper>
 
       <Input.Wrapper label="JSON" m="md">
-        <Prism language="json">{JSON.stringify(editor?.getJSON() ?? {}, null, 2)}</Prism>
+        <Prism language="json">
+          {JSON.stringify(editor?.getJSON() ?? {}, null, 2)}
+        </Prism>
       </Input.Wrapper>
     </>
   );

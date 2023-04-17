@@ -3,20 +3,23 @@ import { Node as ProseMirrorNode } from "@tiptap/pm/model";
 import { PluginKey } from "@tiptap/pm/state";
 import { ReactNodeViewRenderer } from "@tiptap/react";
 import Suggestion, { SuggestionOptions } from "@tiptap/suggestion";
-import { Component } from "./custom";
+import { MentionViewComponent } from "./mentionViewComponent";
 
 export type MentionOptions = {
   HTMLAttributes: Record<string, any>;
-  renderLabel: (props: { options: MentionOptions; node: ProseMirrorNode }) => string;
+  renderLabel: (props: {
+    options: MentionOptions;
+    node: ProseMirrorNode;
+  }) => string;
   suggestion: Omit<SuggestionOptions, "editor">;
 };
 
 export const MentionPluginKey = new PluginKey("mention");
 
-export const Mention = Node.create<MentionOptions>({
+export const MentionNode = Node.create<MentionOptions>({
   name: "mention",
   addNodeView() {
-    return ReactNodeViewRenderer(Component);
+    return ReactNodeViewRenderer(MentionViewComponent);
   },
 
   addOptions() {
@@ -125,7 +128,11 @@ export const Mention = Node.create<MentionOptions>({
   renderHTML({ node, HTMLAttributes }) {
     return [
       "span",
-      mergeAttributes({ "data-type": this.name }, this.options.HTMLAttributes, HTMLAttributes),
+      mergeAttributes(
+        { "data-type": this.name },
+        this.options.HTMLAttributes,
+        HTMLAttributes
+      ),
       this.options.renderLabel({
         options: this.options,
         node,
@@ -158,7 +165,11 @@ export const Mention = Node.create<MentionOptions>({
           state.doc.nodesBetween(anchor - 1, anchor, (node, pos) => {
             if (node.type.name === this.name) {
               isMention = true;
-              tr.insertText(this.options.suggestion.char || "", pos, pos + node.nodeSize);
+              tr.insertText(
+                this.options.suggestion.char || "",
+                pos,
+                pos + node.nodeSize
+              );
 
               return false;
             }

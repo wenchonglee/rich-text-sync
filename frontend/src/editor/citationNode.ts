@@ -47,15 +47,6 @@ export const CitationNode = Node.create<
   }
 >({
   name: "citation",
-
-  // content: "inline*",
-  // group: "block",
-
-  // group: "inline",
-  // inline: true,
-  // selectable: false,
-  // atom: true,
-
   group: "inline",
   inline: true,
   content: "text*",
@@ -75,7 +66,11 @@ export const CitationNode = Node.create<
   },
 
   renderHTML({ HTMLAttributes }) {
-    return ["span", mergeAttributes(this.options.HTMLAttributes, HTMLAttributes), 0];
+    return [
+      "span",
+      mergeAttributes(this.options.HTMLAttributes, HTMLAttributes),
+      0,
+    ];
   },
 
   addNodeView() {
@@ -88,7 +83,9 @@ export const CitationNode = Node.create<
       const citationMark = document.createElement("sup");
 
       const id = node.attrs["data-id"];
-      const index = this.storage.getCitations().findIndex((item: { "data-id": any }) => item["data-id"] === id);
+      const index = this.storage
+        .getCitations()
+        .findIndex((item: { "data-id": any }) => item["data-id"] === id);
 
       // citationMark.innerHTML = `[${index + 1}]`;
       citationMark.innerHTML = `${index + 1}`;
@@ -151,9 +148,6 @@ export const CitationNode = Node.create<
             .toJSON();
 
           return commands.insertContent(citationNode);
-
-          // this.storage.citations.push({ ...citation });
-          // return commands.setNode(this.name, { ...citation });
         },
       //   toggleCitation:
       //     () =>

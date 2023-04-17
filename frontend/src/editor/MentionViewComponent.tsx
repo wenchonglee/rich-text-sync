@@ -1,7 +1,7 @@
 import { Anchor, Avatar, Group, HoverCard, Text } from "@mantine/core";
 import { NodeViewWrapper } from "@tiptap/react";
 
-export const Component = (props: any) => {
+export const MentionViewComponent = (props: any) => {
   return (
     <NodeViewWrapper as="span">
       <HoverCard
@@ -19,7 +19,10 @@ export const Component = (props: any) => {
 
         <HoverCard.Dropdown>
           <Group>
-            <Avatar src={"https://avatars.githubusercontent.com/u/18256786?v=4"} radius="xl" />
+            <Avatar
+              src={"https://avatars.githubusercontent.com/u/18256786?v=4"}
+              radius="xl"
+            />
 
             <div style={{ flex: 1 }}>
               <Text size="sm" weight={500}>
